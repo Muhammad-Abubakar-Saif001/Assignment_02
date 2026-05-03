@@ -26,3 +26,10 @@ jobs:
     # 3. Run tests
     - name: Run tests
       run: npm test
+      env:
+        NODE_ENV: test
+        DB_HOST: localhost
+        DB_PORT: 5432
+        DB_USER: postgres
+        DB_PASSWORD: abubakar001
+        DB_NAME: test-db

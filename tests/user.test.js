@@ -35,8 +35,8 @@ describe("Integration Test: POST /users", () => {
 
     it("should successfully create a user", async () => {
         const userData = {
-            name: "Muhammad Abubakar Saif",
-            email: "muhammadabubakarsaif@gmail.com"
+            name: "Abubakar",
+            email: "abubakar@gmail.com"
         };
 
         // MUST have await here
