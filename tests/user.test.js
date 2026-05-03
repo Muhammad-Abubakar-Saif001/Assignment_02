@@ -1,37 +1,33 @@
 import request from "supertest";
-import app from "../index.js"; // Adjust this path if necessary
+import app from "../index.js";
 import { AppDataSource } from "../src/config/data-source.js";
 import User from "../src/entities/User.js";
 
 describe("Integration Test: POST /users", () => {
     
-    // MUST have async and await here
     beforeAll(async () => {
+        // Only initialize if not already connected
         if (!AppDataSource.isInitialized) {
             await AppDataSource.initialize();
         }
     });
 
-    // MUST have async and await here
     afterEach(async () => {
-        const userRepository = AppDataSource.getRepository(User);
-        await userRepository.clear(); 
-    });
-
-    // MUST have async and await here
-    afterAll(async () => {
+        // Ensure the data source is initialized before trying to clear
         if (AppDataSource.isInitialized) {
-            await AppDataSource.destroy();
+            const userRepository = AppDataSource.getRepository(User);
+            await userRepository.clear(); 
         }
     });
 
     afterAll(async () => {
         if (AppDataSource.isInitialized) {
             await AppDataSource.destroy();
-            // Give TypeORM a half-second to finish closing its connection pool
-            await new Promise(resolve => setTimeout(resolve, 500));
         }
     });
+
+    // ... rest of your test
+
 
     it("should successfully create a user", async () => {
         const userData = {
