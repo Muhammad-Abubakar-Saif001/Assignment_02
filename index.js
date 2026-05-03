@@ -24,7 +24,8 @@ app.post("/users", async (req, res) => {
     }
 });
 
-if (process.env.NODE_ENV !== "test") {
+// Start the server ONLY if not in test environment
+if (process.env.NODE_ENV?.trim() !== "test") {
     AppDataSource.initialize()
         .then(() => {
             const PORT = process.env.PORT || 3000;

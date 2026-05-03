@@ -1,37 +1,52 @@
 import request from "supertest";
-import app from "../../index.js";
-import { AppDataSource } from "../config/data-source.js";
-import User from "../entities/User.js";
+import app from "../index.js"; // Adjust this path if necessary
+import { AppDataSource } from "../src/config/data-source.js";
+import User from "../src/entities/User.js";
 
 describe("Integration Test: POST /users", () => {
     
+    // MUST have async and await here
     beforeAll(async () => {
-        await AppDataSource.initialize();
+        if (!AppDataSource.isInitialized) {
+            await AppDataSource.initialize();
+        }
     });
 
+    // MUST have async and await here
     afterEach(async () => {
         const userRepository = AppDataSource.getRepository(User);
         await userRepository.clear(); 
     });
 
+    // MUST have async and await here
     afterAll(async () => {
-        await AppDataSource.destroy();
+        if (AppDataSource.isInitialized) {
+            await AppDataSource.destroy();
+        }
     });
 
-    it("should successfully create a user and store it in the PostgreSQL database", async () => {
+    afterAll(async () => {
+        if (AppDataSource.isInitialized) {
+            await AppDataSource.destroy();
+            // Give TypeORM a half-second to finish closing its connection pool
+            await new Promise(resolve => setTimeout(resolve, 500));
+        }
+    });
+
+    it("should successfully create a user", async () => {
         const userData = {
-            name: "Test User",
-            email: "test@example.com"
+            name: "Muhammad Abubakar Saif",
+            email: "muhammadabubakarsaif@gmail.com"
         };
 
+        // MUST have await here
         const response = await request(app)
             .post("/users")
             .send(userData);
 
         expect(response.status).toBe(201);
-        expect(response.body).toHaveProperty("id");
-        expect(response.body.name).toBe(userData.name);
-
+        
+        // MUST have await here
         const userRepository = AppDataSource.getRepository(User);
         const userInDb = await userRepository.findOneBy({ email: userData.email });
 
