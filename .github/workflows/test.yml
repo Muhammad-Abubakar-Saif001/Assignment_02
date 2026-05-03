@@ -1,0 +1,28 @@
+name: Node.js CI Workflow
+
+# 1. Configure it to run on every push
+on:
+  push:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    # This step grabs your code from the repository
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # This step sets up the Node environment so npm commands work
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '25.2.1' 
+
+    # 2. Install dependencies
+    - name: Install dependencies
+      run: npm install
+
+    # 3. Run tests
+    - name: Run tests
+      run: npm test
